@@ -3,12 +3,29 @@ import { useParams, Link } from "react-router-dom";
 import { ChevronLeft, ChevronRight, Heart, Share2, Bed, Bath, Car, Maximize } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { properties, formatPrice } from "@/data/properties";
+import { useProperty } from "@/hooks/useProperties";
+
+const formatPrice = (price: number, type: string) => {
+  const formatted = price.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+  return type === "aluguel" ? `${formatted}/mês` : formatted;
+};
 
 const PropertyDetail = () => {
   const { id } = useParams();
-  const property = properties.find((p) => p.id === id);
+  const { data: property, isLoading } = useProperty(id);
   const [currentImg, setCurrentImg] = useState(0);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen">
+        <Header />
+        <div className="pt-28 pb-20 container text-center">
+          <p className="text-muted-foreground">Carregando...</p>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   if (!property) {
     return (
@@ -23,8 +40,9 @@ const PropertyDetail = () => {
     );
   }
 
-  const nextImg = () => setCurrentImg((c) => (c + 1) % property.images.length);
-  const prevImg = () => setCurrentImg((c) => (c - 1 + property.images.length) % property.images.length);
+  const images = property.images?.length ? property.images : [];
+  const nextImg = () => setCurrentImg((c) => (c + 1) % images.length);
+  const prevImg = () => setCurrentImg((c) => (c - 1 + images.length) % images.length);
 
   const details = [
     { label: "Metragem imóvel", value: `${property.area} metros` },
@@ -47,44 +65,48 @@ const PropertyDetail = () => {
           </Link>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-            {/* Gallery */}
             <div className="space-y-4">
               <div className="relative aspect-[4/3] rounded-lg overflow-hidden bg-muted">
-                <img
-                  src={property.images[currentImg]}
-                  alt={property.title}
-                  className="w-full h-full object-cover"
-                />
+                {images.length > 0 ? (
+                  <img src={images[currentImg]} alt={property.title} className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-muted-foreground">Sem foto</div>
+                )}
                 <span className="absolute top-4 right-4 badge-venda text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider rotate-[-15deg]">
                   {property.type}
                 </span>
-                <span className="absolute bottom-4 right-4 bg-secondary/80 text-secondary-foreground text-xs px-3 py-1 rounded">
-                  {currentImg + 1} / {property.images.length}
-                </span>
-                <button onClick={prevImg} className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-secondary/70 text-secondary-foreground flex items-center justify-center hover:bg-secondary transition-colors">
-                  <ChevronLeft size={20} />
-                </button>
-                <button onClick={nextImg} className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-secondary/70 text-secondary-foreground flex items-center justify-center hover:bg-secondary transition-colors">
-                  <ChevronRight size={20} />
-                </button>
+                {images.length > 1 && (
+                  <>
+                    <span className="absolute bottom-4 right-4 bg-secondary/80 text-secondary-foreground text-xs px-3 py-1 rounded">
+                      {currentImg + 1} / {images.length}
+                    </span>
+                    <button onClick={prevImg} className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-secondary/70 text-secondary-foreground flex items-center justify-center hover:bg-secondary transition-colors">
+                      <ChevronLeft size={20} />
+                    </button>
+                    <button onClick={nextImg} className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-secondary/70 text-secondary-foreground flex items-center justify-center hover:bg-secondary transition-colors">
+                      <ChevronRight size={20} />
+                    </button>
+                  </>
+                )}
               </div>
 
-              <div className="flex gap-2">
-                {property.images.map((img, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setCurrentImg(i)}
-                    className={`w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${
-                      i === currentImg ? "border-primary" : "border-transparent opacity-60 hover:opacity-100"
-                    }`}
-                  >
-                    <img src={img} alt="" className="w-full h-full object-cover" loading="lazy" />
-                  </button>
-                ))}
-              </div>
+              {images.length > 1 && (
+                <div className="flex gap-2">
+                  {images.map((img, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setCurrentImg(i)}
+                      className={`w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${
+                        i === currentImg ? "border-primary" : "border-transparent opacity-60 hover:opacity-100"
+                      }`}
+                    >
+                      <img src={img} alt="" className="w-full h-full object-cover" loading="lazy" />
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
-            {/* Info */}
             <div>
               <h1 className="font-heading text-3xl md:text-4xl font-bold text-foreground mb-2">
                 {property.title} {property.area}m²
