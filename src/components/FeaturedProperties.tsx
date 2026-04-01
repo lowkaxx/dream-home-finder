@@ -24,7 +24,7 @@ const FeaturedProperties = () => {
         <div className="text-center mt-12">
           <Link
             to="/imoveis"
-            className="inline-block px-8 py-3 gold-gradient text-primary-foreground font-semibold rounded-full hover:opacity-90 transition-opacity"
+            className="inline-block px-8 py-3 gold-gradient text-primary-foreground font-heading font-semibold tracking-widest uppercase rounded-full hover:opacity-90 transition-opacity"
           >
             Ver Todos os Imóveis
           </Link>

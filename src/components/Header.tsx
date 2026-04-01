@@ -48,7 +48,7 @@ const Header = () => {
             <Link
               key={item.label}
               to={item.href}
-              className="block text-sm font-medium text-foreground hover:text-primary"
+              className="block text-sm font-medium font-heading tracking-widest uppercase text-foreground hover:text-primary"
               onClick={() => setOpen(false)}
             >
               {item.label}

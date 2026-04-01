@@ -51,7 +51,7 @@ const ContactSection = () => {
             />
             <button
               type="submit"
-              className="w-full py-3 gold-gradient text-primary-foreground font-semibold rounded-lg hover:opacity-90 transition-opacity"
+              className="w-full py-3 gold-gradient text-primary-foreground font-heading font-semibold tracking-widest uppercase rounded-lg hover:opacity-90 transition-opacity"
             >
               Enviar Mensagem
             </button>

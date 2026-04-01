@@ -89,7 +89,7 @@ const PropertyDetail = () => {
               <h1 className="font-heading text-3xl md:text-4xl font-bold text-foreground mb-2">
                 {property.title} {property.area}m²
               </h1>
-              <p className="text-2xl font-bold text-primary mb-6">
+              <p className="font-heading text-2xl font-bold text-primary mb-6">
                 {formatPrice(property.price, property.type)}
               </p>
 
