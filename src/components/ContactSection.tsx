@@ -13,21 +13,21 @@ const ContactSection = () => {
             <div className="flex items-start gap-4">
               <Phone size={20} className="text-primary mt-1" />
               <div>
-                <p className="font-semibold text-foreground">Telefone</p>
+                <p className="font-heading font-semibold text-foreground">Telefone</p>
                 <p className="text-muted-foreground text-sm">(11) 99999-9999</p>
               </div>
             </div>
             <div className="flex items-start gap-4">
               <Mail size={20} className="text-primary mt-1" />
               <div>
-                <p className="font-semibold text-foreground">E-mail</p>
+                <p className="font-heading font-semibold text-foreground">E-mail</p>
                 <p className="text-muted-foreground text-sm">contato@soluction.com.br</p>
               </div>
             </div>
             <div className="flex items-start gap-4">
               <MapPin size={20} className="text-primary mt-1" />
               <div>
-                <p className="font-semibold text-foreground">Endereço</p>
+                <p className="font-heading font-semibold text-foreground">Endereço</p>
                 <p className="text-muted-foreground text-sm">Av. Principal, 1000 - Centro<br />Santo André - SP</p>
               </div>
             </div>
@@ -51,7 +51,7 @@ const ContactSection = () => {
             />
             <button
               type="submit"
-              className="w-full py-3 gold-gradient text-primary-foreground font-semibold rounded-lg hover:opacity-90 transition-opacity"
+              className="w-full py-3 gold-gradient text-primary-foreground font-heading font-semibold tracking-widest uppercase rounded-lg hover:opacity-90 transition-opacity"
             >
               Enviar Mensagem
             </button>

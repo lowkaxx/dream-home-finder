@@ -24,13 +24,13 @@ const HeroSection = () => {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <Link
             to="/#contato"
-            className="px-8 py-3 text-sm font-semibold tracking-wide text-primary-foreground border-2 border-primary-foreground/60 rounded-full hover:bg-primary-foreground/10 transition-all"
+            className="px-8 py-3 text-sm font-heading font-semibold tracking-widest uppercase text-primary-foreground border-2 border-primary-foreground/60 rounded-full hover:bg-primary-foreground/10 transition-all"
           >
             Anunciar
           </Link>
           <Link
             to="/imoveis"
-            className="px-8 py-3 text-sm font-semibold tracking-wide text-primary-foreground border-2 border-primary-foreground/60 rounded-full hover:bg-primary-foreground/10 transition-all"
+            className="px-8 py-3 text-sm font-heading font-semibold tracking-widest uppercase text-primary-foreground border-2 border-primary-foreground/60 rounded-full hover:bg-primary-foreground/10 transition-all"
           >
             Buscar
           </Link>

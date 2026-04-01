@@ -25,7 +25,7 @@ const PropertyCard = ({ property }: { property: Property }) => {
       <div className="p-5">
         <h3 className="font-heading text-lg font-semibold text-foreground mb-1">{property.title}</h3>
         <p className="text-sm text-muted-foreground mb-3">{property.address}, {property.city}</p>
-        <p className="text-xl font-bold text-primary mb-4">{formatPrice(property.price, property.type)}</p>
+        <p className="font-heading text-xl font-bold text-primary mb-4">{formatPrice(property.price, property.type)}</p>
 
         <div className="flex items-center gap-4 text-muted-foreground text-xs">
           <span className="flex items-center gap-1"><Maximize size={14} /> {property.area}m²</span>

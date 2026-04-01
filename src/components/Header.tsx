@@ -28,7 +28,7 @@ const Header = () => {
             <Link
               key={item.label}
               to={item.href}
-              className={`text-sm font-medium tracking-wide transition-colors hover:text-primary ${
+              className={`text-sm font-medium tracking-widest uppercase transition-colors hover:text-primary font-heading ${
                 location.pathname === item.href ? "text-primary border-b-2 border-primary pb-1" : "text-foreground"
               }`}
             >
@@ -48,7 +48,7 @@ const Header = () => {
             <Link
               key={item.label}
               to={item.href}
-              className="block text-sm font-medium text-foreground hover:text-primary"
+              className="block text-sm font-medium font-heading tracking-widest uppercase text-foreground hover:text-primary"
               onClick={() => setOpen(false)}
             >
               {item.label}
