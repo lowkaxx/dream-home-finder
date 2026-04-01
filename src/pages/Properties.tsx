@@ -3,11 +3,12 @@ import { Search } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PropertyCard from "@/components/PropertyCard";
-import { properties } from "@/data/properties";
+import { useProperties } from "@/hooks/useProperties";
 
 const Properties = () => {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<"todos" | "venda" | "aluguel">("todos");
+  const { data: properties = [], isLoading } = useProperties();
 
   const filtered = properties.filter((p) => {
     const matchSearch = p.title.toLowerCase().includes(search.toLowerCase()) ||
@@ -52,13 +53,17 @@ const Properties = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filtered.map((p) => (
-              <PropertyCard key={p.id} property={p} />
-            ))}
-          </div>
+          {isLoading ? (
+            <p className="text-center text-muted-foreground py-16">Carregando imóveis...</p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {filtered.map((p) => (
+                <PropertyCard key={p.id} property={p} />
+              ))}
+            </div>
+          )}
 
-          {filtered.length === 0 && (
+          {!isLoading && filtered.length === 0 && (
             <p className="text-center text-muted-foreground py-16">Nenhum imóvel encontrado.</p>
           )}
         </div>

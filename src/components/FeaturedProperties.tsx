@@ -1,8 +1,9 @@
-import { properties } from "@/data/properties";
+import { useProperties } from "@/hooks/useProperties";
 import PropertyCard from "./PropertyCard";
 import { Link } from "react-router-dom";
 
 const FeaturedProperties = () => {
+  const { data: properties = [] } = useProperties();
   const featured = properties.slice(0, 3);
 
   return (
@@ -15,11 +16,15 @@ const FeaturedProperties = () => {
           Confira nossas melhores oportunidades selecionadas para você
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {featured.map((p) => (
-            <PropertyCard key={p.id} property={p} />
-          ))}
-        </div>
+        {featured.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {featured.map((p) => (
+              <PropertyCard key={p.id} property={p} />
+            ))}
+          </div>
+        ) : (
+          <p className="text-muted-foreground text-center py-8">Nenhum imóvel cadastrado ainda.</p>
+        )}
 
         <div className="text-center mt-12">
           <Link
