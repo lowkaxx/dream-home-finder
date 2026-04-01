@@ -20,7 +20,7 @@ const ContactSection = () => {
             <div className="flex items-start gap-4">
               <Mail size={20} className="text-primary mt-1" />
               <div>
-                <p className="font-semibold text-foreground">E-mail</p>
+                <p className="font-heading font-semibold text-foreground">E-mail</p>
                 <p className="text-muted-foreground text-sm">contato@soluction.com.br</p>
               </div>
             </div>
