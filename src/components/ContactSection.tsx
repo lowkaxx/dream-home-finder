@@ -27,7 +27,7 @@ const ContactSection = () => {
             <div className="flex items-start gap-4">
               <MapPin size={20} className="text-primary mt-1" />
               <div>
-                <p className="font-semibold text-foreground">Endereço</p>
+                <p className="font-heading font-semibold text-foreground">Endereço</p>
                 <p className="text-muted-foreground text-sm">Av. Principal, 1000 - Centro<br />Santo André - SP</p>
               </div>
             </div>
