@@ -36,7 +36,7 @@
 
     --radius: 0.5rem;
 
-    --font-heading: 'Cormorant Garamond', serif;
+    --font-heading: 'Roboto', sans-serif;
     --font-body: 'Montserrat', sans-serif;
 
     --hero-overlay: linear-gradient(135deg, hsla(220, 20%, 10%, 0.65), hsla(25, 60%, 20%, 0.45));
