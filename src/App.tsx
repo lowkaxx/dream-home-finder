@@ -29,6 +29,8 @@ const App = () => (
             <Route path="/imoveis" element={<Properties />} />
             <Route path="/imovel/:id" element={<PropertyDetail />} />
             <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/cadastro" element={<Register />} />
+            <Route path="/configuracoes" element={<UserSettings />} />
             <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
             <Route path="/admin/imovel/:id" element={<ProtectedRoute><AdminPropertyForm /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
