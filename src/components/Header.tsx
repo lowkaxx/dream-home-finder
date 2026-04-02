@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X, User, LogOut, Settings, PlusCircle, LayoutDashboard, LogIn, UserPlus } from "lucide-react";
+import { Menu, X, User, LogOut, Settings, PlusCircle, LayoutDashboard, LogIn, UserPlus, Sun, Moon } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { useTheme } from "@/hooks/useTheme";
 import logo from "@/assets/logo.png";
 
 const navItems = [
@@ -20,6 +21,7 @@ const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, isAdmin, signOut } = useAuth();
+  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -83,6 +85,14 @@ const Header = () => {
                       <p className="text-xs text-muted-foreground truncate">{user.email}</p>
                     </div>
 
+                    <button
+                      onClick={toggleTheme}
+                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted transition-colors w-full text-left"
+                    >
+                      {theme === "light" ? <Moon size={16} className="text-muted-foreground" /> : <Sun size={16} className="text-muted-foreground" />}
+                      {theme === "light" ? "Tema Escuro" : "Tema Claro"}
+                    </button>
+
                     <Link
                       to="/configuracoes"
                       onClick={() => setDropdownOpen(false)}
@@ -125,6 +135,13 @@ const Header = () => {
                   </>
                 ) : (
                   <>
+                    <button
+                      onClick={toggleTheme}
+                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted transition-colors w-full text-left"
+                    >
+                      {theme === "light" ? <Moon size={16} className="text-muted-foreground" /> : <Sun size={16} className="text-muted-foreground" />}
+                      {theme === "light" ? "Tema Escuro" : "Tema Claro"}
+                    </button>
                     <Link
                       to="/admin/login"
                       onClick={() => setDropdownOpen(false)}
@@ -166,6 +183,10 @@ const Header = () => {
             </Link>
           ))}
           <div className="border-t border-border pt-3 mt-3 space-y-3">
+            <button onClick={toggleTheme} className="flex items-center gap-2 text-sm font-medium text-foreground hover:text-primary">
+              {theme === "light" ? <Moon size={16} /> : <Sun size={16} />}
+              {theme === "light" ? "Tema Escuro" : "Tema Claro"}
+            </button>
             {user ? (
               <>
                 <Link to="/configuracoes" onClick={() => setOpen(false)} className="block text-sm font-medium text-foreground hover:text-primary">
