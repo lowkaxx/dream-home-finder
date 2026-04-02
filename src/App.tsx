@@ -11,6 +11,8 @@ import PropertyDetail from "./pages/PropertyDetail";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminPropertyForm from "./pages/AdminPropertyForm";
+import Register from "./pages/Register";
+import UserSettings from "./pages/UserSettings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
