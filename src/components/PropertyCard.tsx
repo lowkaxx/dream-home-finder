@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Bed, Bath, Car, Maximize } from "lucide-react";
 import type { DbProperty } from "@/hooks/useProperties";
+import FavoriteButton from "@/components/FavoriteButton";
 
 const formatPrice = (price: number, type: string) => {
   const formatted = price.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -28,9 +29,10 @@ const PropertyCard = ({ property }: { property: DbProperty }) => {
         ) : (
           <div className="w-full h-full flex items-center justify-center text-muted-foreground text-sm">Sem foto</div>
         )}
-        <span className="absolute top-3 right-3 badge-venda text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">
+        <span className="absolute top-3 left-3 badge-venda text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">
           {property.type}
         </span>
+        <FavoriteButton propertyId={property.id} className="absolute top-3 right-3" />
       </div>
 
       <div className="p-5">

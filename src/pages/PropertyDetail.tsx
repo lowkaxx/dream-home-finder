@@ -1,9 +1,12 @@
 import { useState } from "react";
-import { useParams, Link } from "react-router-dom";
-import { ChevronLeft, ChevronRight, Heart, Share2, Bed, Bath, Car, Maximize } from "lucide-react";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { ChevronLeft, ChevronRight, Share2, Bed, Bath, Car, Maximize, Pencil, Trash2 } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { useProperty } from "@/hooks/useProperties";
+import FavoriteButton from "@/components/FavoriteButton";
+import { useProperty, useDeleteProperty } from "@/hooks/useProperties";
+import { useAuth } from "@/hooks/useAuth";
+import { useToast } from "@/hooks/use-toast";
 
 const formatPrice = (price: number, type: string) => {
   const formatted = price.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -12,8 +15,24 @@ const formatPrice = (price: number, type: string) => {
 
 const PropertyDetail = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { data: property, isLoading } = useProperty(id);
+  const { isAdmin } = useAuth();
+  const deleteProperty = useDeleteProperty();
+  const { toast } = useToast();
   const [currentImg, setCurrentImg] = useState(0);
+
+  const handleDelete = async () => {
+    if (!property) return;
+    if (!confirm(`Deseja realmente excluir "${property.title}"?`)) return;
+    try {
+      await deleteProperty.mutateAsync(property.id);
+      toast({ title: "Imóvel excluído com sucesso" });
+      navigate("/imoveis");
+    } catch {
+      toast({ title: "Erro ao excluir", variant: "destructive" });
+    }
+  };
 
   if (isLoading) {
     return (
@@ -60,9 +79,27 @@ const PropertyDetail = () => {
       <Header />
       <div className="pt-24 pb-20">
         <div className="container">
-          <Link to="/imoveis" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-primary mb-6">
-            <ChevronLeft size={16} /> Voltar
-          </Link>
+          <div className="flex items-center justify-between mb-6">
+            <Link to="/imoveis" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-primary">
+              <ChevronLeft size={16} /> Voltar
+            </Link>
+            {isAdmin && (
+              <div className="flex items-center gap-2">
+                <Link
+                  to={`/admin/imovel/${property.id}`}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-border text-sm font-medium text-foreground hover:border-primary hover:text-primary transition-colors"
+                >
+                  <Pencil size={14} /> Editar
+                </Link>
+                <button
+                  onClick={handleDelete}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-border text-sm font-medium text-destructive hover:border-destructive transition-colors"
+                >
+                  <Trash2 size={14} /> Excluir
+                </button>
+              </div>
+            )}
+          </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
             <div className="space-y-4">
@@ -72,9 +109,10 @@ const PropertyDetail = () => {
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-muted-foreground">Sem foto</div>
                 )}
-                <span className="absolute top-4 right-4 badge-venda text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider rotate-[-15deg]">
+                <span className="absolute top-4 left-4 badge-venda text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">
                   {property.type}
                 </span>
+                <FavoriteButton propertyId={property.id} className="absolute top-4 right-4" />
                 {images.length > 1 && (
                   <>
                     <span className="absolute bottom-4 right-4 bg-secondary/80 text-secondary-foreground text-xs px-3 py-1 rounded">
@@ -116,9 +154,6 @@ const PropertyDetail = () => {
               </p>
 
               <div className="flex items-center gap-3 mb-8">
-                <button className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary transition-colors">
-                  <Heart size={18} />
-                </button>
                 <button className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary transition-colors">
                   <Share2 size={18} />
                 </button>

@@ -1,8 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X, User, LogOut, Settings, PlusCircle, LayoutDashboard, LogIn, UserPlus, Sun, Moon } from "lucide-react";
+import { Menu, X, User, LogOut, Settings, PlusCircle, LogIn, UserPlus, Heart, SlidersHorizontal } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
-import { useTheme } from "@/hooks/useTheme";
 import logo from "@/assets/logo.png";
 
 const navItems = [
@@ -21,7 +20,6 @@ const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, isAdmin, signOut } = useAuth();
-  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -43,6 +41,10 @@ const Header = () => {
     ? user.user_metadata.full_name.charAt(0).toUpperCase()
     : user?.email?.charAt(0).toUpperCase() || "U";
 
+  const allNavItems = isAdmin
+    ? [...navItems, { label: "Cadastrar Imóvel", href: "/admin/imovel/novo" }]
+    : navItems;
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-md shadow-card">
       <div className="container flex items-center justify-between h-20">
@@ -52,7 +54,7 @@ const Header = () => {
 
         <div className="hidden md:flex items-center gap-6">
           <nav className="flex items-center gap-8">
-            {navItems.map((item) => (
+            {allNavItems.map((item) => (
               <Link
                 key={item.label}
                 to={item.href}
@@ -65,7 +67,6 @@ const Header = () => {
             ))}
           </nav>
 
-          {/* User avatar dropdown */}
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -85,13 +86,23 @@ const Header = () => {
                       <p className="text-xs text-muted-foreground truncate">{user.email}</p>
                     </div>
 
-                    <button
-                      onClick={toggleTheme}
-                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted transition-colors w-full text-left"
+                    <Link
+                      to="/favoritos"
+                      onClick={() => setDropdownOpen(false)}
+                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted transition-colors"
                     >
-                      {theme === "light" ? <Moon size={16} className="text-muted-foreground" /> : <Sun size={16} className="text-muted-foreground" />}
-                      {theme === "light" ? "Tema Escuro" : "Tema Claro"}
-                    </button>
+                      <Heart size={16} className="text-muted-foreground" />
+                      Favoritos
+                    </Link>
+
+                    <Link
+                      to="/preferencias"
+                      onClick={() => setDropdownOpen(false)}
+                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted transition-colors"
+                    >
+                      <SlidersHorizontal size={16} className="text-muted-foreground" />
+                      Preferências
+                    </Link>
 
                     <Link
                       to="/configuracoes"
@@ -103,24 +114,14 @@ const Header = () => {
                     </Link>
 
                     {isAdmin && (
-                      <>
-                        <Link
-                          to="/admin"
-                          onClick={() => setDropdownOpen(false)}
-                          className="flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted transition-colors"
-                        >
-                          <LayoutDashboard size={16} className="text-muted-foreground" />
-                          Painel Admin
-                        </Link>
-                        <Link
-                          to="/admin/imovel/novo"
-                          onClick={() => setDropdownOpen(false)}
-                          className="flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted transition-colors"
-                        >
-                          <PlusCircle size={16} className="text-muted-foreground" />
-                          Cadastrar Imóvel
-                        </Link>
-                      </>
+                      <Link
+                        to="/admin/imovel/novo"
+                        onClick={() => setDropdownOpen(false)}
+                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted transition-colors"
+                      >
+                        <PlusCircle size={16} className="text-muted-foreground" />
+                        Cadastrar Imóvel
+                      </Link>
                     )}
 
                     <div className="border-t border-border mt-1 pt-1">
@@ -135,13 +136,6 @@ const Header = () => {
                   </>
                 ) : (
                   <>
-                    <button
-                      onClick={toggleTheme}
-                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted transition-colors w-full text-left"
-                    >
-                      {theme === "light" ? <Moon size={16} className="text-muted-foreground" /> : <Sun size={16} className="text-muted-foreground" />}
-                      {theme === "light" ? "Tema Escuro" : "Tema Claro"}
-                    </button>
                     <Link
                       to="/admin/login"
                       onClick={() => setDropdownOpen(false)}
@@ -172,7 +166,7 @@ const Header = () => {
 
       {open && (
         <nav className="md:hidden bg-card border-t border-border px-6 py-4 space-y-3">
-          {navItems.map((item) => (
+          {allNavItems.map((item) => (
             <Link
               key={item.label}
               to={item.href}
@@ -183,25 +177,17 @@ const Header = () => {
             </Link>
           ))}
           <div className="border-t border-border pt-3 mt-3 space-y-3">
-            <button onClick={toggleTheme} className="flex items-center gap-2 text-sm font-medium text-foreground hover:text-primary">
-              {theme === "light" ? <Moon size={16} /> : <Sun size={16} />}
-              {theme === "light" ? "Tema Escuro" : "Tema Claro"}
-            </button>
             {user ? (
               <>
+                <Link to="/favoritos" onClick={() => setOpen(false)} className="block text-sm font-medium text-foreground hover:text-primary">
+                  Favoritos
+                </Link>
+                <Link to="/preferencias" onClick={() => setOpen(false)} className="block text-sm font-medium text-foreground hover:text-primary">
+                  Preferências
+                </Link>
                 <Link to="/configuracoes" onClick={() => setOpen(false)} className="block text-sm font-medium text-foreground hover:text-primary">
                   Configurações
                 </Link>
-                {isAdmin && (
-                  <>
-                    <Link to="/admin" onClick={() => setOpen(false)} className="block text-sm font-medium text-foreground hover:text-primary">
-                      Painel Admin
-                    </Link>
-                    <Link to="/admin/imovel/novo" onClick={() => setOpen(false)} className="block text-sm font-medium text-foreground hover:text-primary">
-                      Cadastrar Imóvel
-                    </Link>
-                  </>
-                )}
                 <button onClick={() => { handleSignOut(); setOpen(false); }} className="block text-sm font-medium text-destructive">
                   Sair
                 </button>

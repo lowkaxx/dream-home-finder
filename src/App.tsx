@@ -14,6 +14,8 @@ import AdminDashboard from "./pages/AdminDashboard";
 import AdminPropertyForm from "./pages/AdminPropertyForm";
 import Register from "./pages/Register";
 import UserSettings from "./pages/UserSettings";
+import Favorites from "./pages/Favorites";
+import Preferences from "./pages/Preferences";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -33,6 +35,8 @@ const App = () => (
               <Route path="/admin/login" element={<AdminLogin />} />
               <Route path="/cadastro" element={<Register />} />
               <Route path="/configuracoes" element={<UserSettings />} />
+              <Route path="/favoritos" element={<Favorites />} />
+              <Route path="/preferencias" element={<Preferences />} />
               <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
               <Route path="/admin/imovel/:id" element={<ProtectedRoute><AdminPropertyForm /></ProtectedRoute>} />
               <Route path="*" element={<NotFound />} />
