@@ -54,17 +54,29 @@ const Header = () => {
 
         <div className="hidden md:flex items-center gap-6">
           <nav className="flex items-center gap-8">
-            {allNavItems.map((item) => (
-              <Link
-                key={item.label}
-                to={item.href}
-                className={`text-sm font-medium tracking-wide transition-colors hover:text-primary ${
-                  location.pathname === item.href ? "text-primary border-b-2 border-primary pb-1" : "text-foreground"
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
+            {allNavItems.map((item) =>
+              'external' in item && item.external ? (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm font-medium tracking-wide transition-colors hover:text-primary text-foreground"
+                >
+                  {item.label}
+                </a>
+              ) : (
+                <Link
+                  key={item.label}
+                  to={item.href}
+                  className={`text-sm font-medium tracking-wide transition-colors hover:text-primary ${
+                    location.pathname === item.href ? "text-primary border-b-2 border-primary pb-1" : "text-foreground"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              )
+            )}
           </nav>
 
           <div className="relative" ref={dropdownRef}>
