@@ -7,10 +7,10 @@ import logo from "@/assets/logo.png";
 const navItems = [
   { label: "Home", href: "/" },
   { label: "Imóveis", href: "/imoveis" },
-  { label: "Sobre", href: "/#sobre" },
-  { label: "Depoimentos", href: "/#depoimentos" },
-  { label: "Contato", href: "/#contato" },
-  { label: "Anuncie", href: "/#contato" },
+  { label: "Sobre", href: "/sobre" },
+  { label: "Depoimentos", href: "/depoimentos" },
+  { label: "Contato", href: "/contato" },
+  { label: "Anuncie", href: "https://wa.me/5511999999999?text=Olá! Gostaria de anunciar meu imóvel.", external: true },
 ];
 
 const Header = () => {
@@ -54,17 +54,29 @@ const Header = () => {
 
         <div className="hidden md:flex items-center gap-6">
           <nav className="flex items-center gap-8">
-            {allNavItems.map((item) => (
-              <Link
-                key={item.label}
-                to={item.href}
-                className={`text-sm font-medium tracking-wide transition-colors hover:text-primary ${
-                  location.pathname === item.href ? "text-primary border-b-2 border-primary pb-1" : "text-foreground"
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
+            {allNavItems.map((item) =>
+              'external' in item && item.external ? (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm font-medium tracking-wide transition-colors hover:text-primary text-foreground"
+                >
+                  {item.label}
+                </a>
+              ) : (
+                <Link
+                  key={item.label}
+                  to={item.href}
+                  className={`text-sm font-medium tracking-wide transition-colors hover:text-primary ${
+                    location.pathname === item.href ? "text-primary border-b-2 border-primary pb-1" : "text-foreground"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              )
+            )}
           </nav>
 
           <div className="relative" ref={dropdownRef}>
@@ -166,16 +178,29 @@ const Header = () => {
 
       {open && (
         <nav className="md:hidden bg-card border-t border-border px-6 py-4 space-y-3">
-          {allNavItems.map((item) => (
-            <Link
-              key={item.label}
-              to={item.href}
-              className="block text-sm font-medium text-foreground hover:text-primary"
-              onClick={() => setOpen(false)}
-            >
-              {item.label}
-            </Link>
-          ))}
+          {allNavItems.map((item) =>
+            'external' in item && item.external ? (
+              <a
+                key={item.label}
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block text-sm font-medium text-foreground hover:text-primary"
+                onClick={() => setOpen(false)}
+              >
+                {item.label}
+              </a>
+            ) : (
+              <Link
+                key={item.label}
+                to={item.href}
+                className="block text-sm font-medium text-foreground hover:text-primary"
+                onClick={() => setOpen(false)}
+              >
+                {item.label}
+              </Link>
+            )
+          )}
           <div className="border-t border-border pt-3 mt-3 space-y-3">
             {user ? (
               <>

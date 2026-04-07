@@ -16,6 +16,9 @@ import Register from "./pages/Register";
 import UserSettings from "./pages/UserSettings";
 import Favorites from "./pages/Favorites";
 import Preferences from "./pages/Preferences";
+import About from "./pages/About";
+import Testimonials from "./pages/Testimonials";
+import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,6 +35,9 @@ const App = () => (
               <Route path="/" element={<Index />} />
               <Route path="/imoveis" element={<Properties />} />
               <Route path="/imovel/:id" element={<PropertyDetail />} />
+              <Route path="/sobre" element={<About />} />
+              <Route path="/depoimentos" element={<Testimonials />} />
+              <Route path="/contato" element={<Contact />} />
               <Route path="/admin/login" element={<AdminLogin />} />
               <Route path="/cadastro" element={<Register />} />
               <Route path="/configuracoes" element={<UserSettings />} />
