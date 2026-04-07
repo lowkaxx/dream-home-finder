@@ -178,16 +178,29 @@ const Header = () => {
 
       {open && (
         <nav className="md:hidden bg-card border-t border-border px-6 py-4 space-y-3">
-          {allNavItems.map((item) => (
-            <Link
-              key={item.label}
-              to={item.href}
-              className="block text-sm font-medium text-foreground hover:text-primary"
-              onClick={() => setOpen(false)}
-            >
-              {item.label}
-            </Link>
-          ))}
+          {allNavItems.map((item) =>
+            'external' in item && item.external ? (
+              <a
+                key={item.label}
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block text-sm font-medium text-foreground hover:text-primary"
+                onClick={() => setOpen(false)}
+              >
+                {item.label}
+              </a>
+            ) : (
+              <Link
+                key={item.label}
+                to={item.href}
+                className="block text-sm font-medium text-foreground hover:text-primary"
+                onClick={() => setOpen(false)}
+              >
+                {item.label}
+              </Link>
+            )
+          )}
           <div className="border-t border-border pt-3 mt-3 space-y-3">
             {user ? (
               <>
