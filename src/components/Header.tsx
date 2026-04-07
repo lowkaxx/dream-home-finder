@@ -7,10 +7,10 @@ import logo from "@/assets/logo.png";
 const navItems = [
   { label: "Home", href: "/" },
   { label: "Imóveis", href: "/imoveis" },
-  { label: "Sobre", href: "/#sobre" },
-  { label: "Depoimentos", href: "/#depoimentos" },
-  { label: "Contato", href: "/#contato" },
-  { label: "Anuncie", href: "/#contato" },
+  { label: "Sobre", href: "/sobre" },
+  { label: "Depoimentos", href: "/depoimentos" },
+  { label: "Contato", href: "/contato" },
+  { label: "Anuncie", href: "https://wa.me/5511999999999?text=Olá! Gostaria de anunciar meu imóvel.", external: true },
 ];
 
 const Header = () => {

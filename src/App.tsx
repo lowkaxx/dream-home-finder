@@ -16,6 +16,9 @@ import Register from "./pages/Register";
 import UserSettings from "./pages/UserSettings";
 import Favorites from "./pages/Favorites";
 import Preferences from "./pages/Preferences";
+import About from "./pages/About";
+import Testimonials from "./pages/Testimonials";
+import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
