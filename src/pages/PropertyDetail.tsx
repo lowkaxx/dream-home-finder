@@ -158,7 +158,7 @@ const PropertyDetail = () => {
                   <Share2 size={18} />
                 </button>
                 <a
-                  href="https://wa.me/5511999999999"
+                  href="https://wa.me/5511978580174"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-10 h-10 rounded-full gold-gradient flex items-center justify-center text-primary-foreground"
