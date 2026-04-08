@@ -21,13 +21,8 @@ const ContactSection = () => {
                 <Phone size={20} className="text-accent-foreground" />
               </div>
               <div>
-<<<<<<< HEAD
-                <p className="font-heading font-semibold text-foreground">Telefone</p>
-                <p className="text-muted-foreground text-sm">(11) 97858-0174</p>
-=======
                 <p className="font-heading font-semibold text-foreground mb-1">Telefone</p>
                 <p className="text-muted-foreground text-sm">(11) 99999-9999</p>
->>>>>>> 736754682639c7032948b151be8a0f116e229f71
               </div>
             </div>
             <div className="flex items-start gap-4">

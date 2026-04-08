@@ -25,7 +25,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       _user_id: userId,
       _role: "admin",
     });
-    setIsAdmin(true);
+    setIsAdmin(!!data);
   };
 
   useEffect(() => {
