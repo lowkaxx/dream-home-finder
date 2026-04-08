@@ -1,18 +1,22 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import heroBg from "@/assets/hero-bg.jpg";
 
 const HeroSection = () => {
+  const [loaded, setLoaded] = useState(false);
+
   return (
     <section className="relative h-screen min-h-[700px] flex items-center justify-center overflow-hidden">
       <img
         src={heroBg}
         alt="Casa de luxo"
-        className="absolute inset-0 w-full h-full object-cover"
+        className={`absolute inset-0 w-full h-full object-cover transition-all duration-[1.5s] ease-out ${loaded ? "opacity-100 scale-100" : "opacity-0 scale-110"}`}
         width={1920}
         height={1080}
         loading="eager"
         fetchPriority="high"
         decoding="async"
+        onLoad={() => setLoaded(true)}
       />
       <div className="absolute inset-0 hero-overlay" />
 
