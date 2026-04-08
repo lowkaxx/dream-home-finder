@@ -3,7 +3,7 @@ import heroBg from "@/assets/hero-bg.jpg";
 
 const HeroSection = () => {
   return (
-    <section className="relative h-[90vh] min-h-[600px] flex items-center justify-center overflow-hidden">
+    <section className="relative h-screen min-h-[700px] flex items-center justify-center overflow-hidden">
       <img
         src={heroBg}
         alt="Casa de luxo"
@@ -16,27 +16,35 @@ const HeroSection = () => {
       />
       <div className="absolute inset-0 hero-overlay" />
 
-      <div className="relative z-10 text-center px-4 animate-fade-in-up">
-        <h1 className="font-heading text-5xl md:text-7xl font-bold text-primary-foreground mb-6 drop-shadow-lg">
-          Seu lar, nossa missão!
+      {/* Decorative gold line */}
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-accent to-transparent opacity-40" />
+
+      <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
+        <p className="animate-fade-in text-accent font-heading text-sm md:text-base tracking-[0.3em] uppercase mb-6 opacity-0" style={{ animationDelay: '0.2s' }}>
+          Imobiliária Premium
+        </p>
+        <h1 className="animate-fade-in-up font-heading text-5xl md:text-7xl lg:text-8xl font-bold text-primary-foreground mb-6 leading-tight opacity-0" style={{ animationDelay: '0.4s' }}>
+          Seu lar,{" "}
+          <span className="text-gold">nossa missão!</span>
         </h1>
-        <p className="font-body text-lg md:text-xl text-primary-foreground/90 mb-10 max-w-2xl mx-auto">
+        <p className="animate-fade-in-up font-body text-lg md:text-xl text-primary-foreground/80 mb-12 max-w-2xl mx-auto opacity-0" style={{ animationDelay: '0.6s' }}>
           Encontre hoje seu novo lar na Soluction!
         </p>
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <Link
-            to="/#contato"
-            className="px-8 py-3 text-sm font-heading font-semibold tracking-widest uppercase text-primary-foreground border-2 border-primary-foreground/60 rounded-full hover:bg-primary-foreground/10 transition-all"
-          >
+        <div className="animate-fade-in-up flex flex-col sm:flex-row items-center justify-center gap-5 opacity-0" style={{ animationDelay: '0.8s' }}>
+          <Link to="/#contato" className="btn-outline-premium">
             Anunciar
           </Link>
-          <Link
-            to="/imoveis"
-            className="px-8 py-3 text-sm font-heading font-semibold tracking-widest uppercase text-primary-foreground border-2 border-primary-foreground/60 rounded-full hover:bg-primary-foreground/10 transition-all"
-          >
-            Buscar
+          <Link to="/imoveis" className="btn-premium">
+            Buscar Imóveis
           </Link>
+        </div>
+      </div>
+
+      {/* Scroll indicator */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-fade-in opacity-0" style={{ animationDelay: '1.2s' }}>
+        <div className="w-6 h-10 rounded-full border-2 border-primary-foreground/30 flex justify-center pt-2">
+          <div className="w-1 h-2.5 bg-primary-foreground/50 rounded-full animate-bounce" />
         </div>
       </div>
     </section>
