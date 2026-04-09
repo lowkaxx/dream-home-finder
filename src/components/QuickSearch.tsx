@@ -26,7 +26,7 @@ const QuickSearch = () => {
   };
 
   return (
-    <section ref={ref} className={`reveal-section ${revealed ? "revealed" : ""} py-20 md:py-28`}>
+    <section ref={revealRef as React.RefObject<HTMLElement>} className="reveal-section py-20 md:py-28">
       <div className="container">
         <p className="text-center text-accent font-heading text-sm tracking-[0.25em] uppercase mb-3">
           Encontre rapidamente
