@@ -53,6 +53,11 @@ export default function AdminVisits() {
     }
   }, [toast]);
 
+  useEffect(() => {
+    loadVisits();
+  }, [loadVisits]);
+
+
   const updateVisitStatus = async (visitId: string, status: VisitSchedule['status']) => {
     try {
       await VisitService.updateVisitStatus(visitId, status);
