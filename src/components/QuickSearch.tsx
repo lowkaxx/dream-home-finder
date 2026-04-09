@@ -18,7 +18,7 @@ const options: SearchOption[] = [
 
 const QuickSearch = () => {
   const navigate = useNavigate();
-  const { ref, revealed } = useReveal();
+  const revealRef = useReveal();
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const handleNavigate = (search: string) => {
