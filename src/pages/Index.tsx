@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import HeroSection from "@/components/HeroSection";
+import QuickSearch from "@/components/QuickSearch";
 import FeaturedProperties from "@/components/FeaturedProperties";
 import AboutSection from "@/components/AboutSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
