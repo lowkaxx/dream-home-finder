@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Calendar, Clock, User, Phone, Mail, CheckCircle, XCircle, AlertCircle, Eye } from 'lucide-react';
@@ -11,6 +11,19 @@ import { VisitService, VisitSchedule } from '@/services/visit.service';
 import { useToast } from '@/hooks/use-toast';
 import AdminLayout from '@/components/AdminLayout';
 
+interface VisitWithProperty extends VisitSchedule {
+  properties?: {
+    id: string;
+    title: string;
+    address: string;
+    city: string;
+  };
+  profiles?: {
+    display_name: string | null;
+    avatar_url: string | null;
+  };
+}
+
 const statusConfig = {
   pending: { label: 'Pendente', color: 'bg-yellow-100 text-yellow-800', icon: AlertCircle },
   confirmed: { label: 'Confirmada', color: 'bg-green-100 text-green-800', icon: CheckCircle },
@@ -19,16 +32,16 @@ const statusConfig = {
 };
 
 export default function AdminVisits() {
-  const [visits, setVisits] = useState<VisitSchedule[]>([]);
+  const [visits, setVisits] = useState<VisitWithProperty[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedVisit, setSelectedVisit] = useState<VisitSchedule | null>(null);
+  const [selectedVisit, setSelectedVisit] = useState<VisitWithProperty | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
     loadVisits();
-  }, []);
+  }, [loadVisits]);
 
-  const loadVisits = async () => {
+  const loadVisits = useCallback(async () => {
     try {
       const data = await VisitService.getAllVisits();
       setVisits(data);
@@ -42,7 +55,7 @@ export default function AdminVisits() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [toast]);
 
   const updateVisitStatus = async (visitId: string, status: VisitSchedule['status']) => {
     try {
@@ -104,7 +117,7 @@ export default function AdminVisits() {
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-lg">
-                    {(visit as any).properties?.title || 'Imóvel não encontrado'}
+                    {visit.properties?.title || 'Imóvel não encontrado'}
                   </CardTitle>
                   {getStatusBadge(visit.status)}
                 </div>
@@ -135,7 +148,7 @@ export default function AdminVisits() {
                   <Clock className="w-4 h-4 text-muted-foreground" />
                   <span className="text-sm font-medium">{visit.visit_time}</span>
                   <span className="text-sm text-muted-foreground">
-                    • {(visit as any).properties?.address}, {(visit as any).properties?.city}
+                    • {visit.properties?.address}, {visit.properties?.city}
                   </span>
                 </div>
 
@@ -216,10 +229,10 @@ export default function AdminVisits() {
                         <div>
                           <label className="text-sm font-medium">Imóvel</label>
                           <p className="text-sm text-muted-foreground mt-1">
-                            {(visit as any).properties?.title}
+                            {visit.properties?.title}
                           </p>
                           <p className="text-sm text-muted-foreground">
-                            {(visit as any).properties?.address}, {(visit as any).properties?.city}
+                            {visit.properties?.address}, {visit.properties?.city}
                           </p>
                         </div>
                       </div>

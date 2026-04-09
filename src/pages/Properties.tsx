@@ -1,18 +1,25 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Search, SlidersHorizontal, X } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PropertyCard from "@/components/PropertyCard";
-import { useProperties } from "@/hooks/useProperties";
+import { useProperties, type DbProperty } from "@/hooks/useProperties";
 
 const Properties = () => {
   const [searchParams] = useSearchParams();
-  const tipoParam = searchParams.get("tipo") || "";
-  const [search, setSearch] = useState(tipoParam);
+  const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<"todos" | "venda" | "aluguel">("todos");
+  const [category, setCategory] = useState<"house" | "apartment" | "commercial" | "">("");
   const [showFilters, setShowFilters] = useState(false);
   const [bedrooms, setBedrooms] = useState("");
+
+  useEffect(() => {
+    const categoryParam = searchParams.get("category");
+    if (categoryParam === "house" || categoryParam === "apartment" || categoryParam === "commercial") {
+      setCategory(categoryParam);
+    }
+  }, [searchParams]);
   const [bathrooms, setBathrooms] = useState("");
   const [parking, setParking] = useState("");
   const [city, setCity] = useState("");
@@ -20,9 +27,40 @@ const Properties = () => {
   const [maxArea, setMaxArea] = useState("");
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
-  const { data: properties = [], isLoading } = useProperties();
+  const { data: properties = [], isLoading, isError } = useProperties();
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen">
+        <Header />
+        <div className="pt-28 pb-20 container text-center">
+          <p className="text-muted-foreground">Carregando imóveis...</p>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="min-h-screen">
+        <Header />
+        <div className="pt-28 pb-20 container text-center">
+          <p className="text-destructive">Erro ao carregar imóveis. Tente recarregar a página.</p>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   const cities = [...new Set(properties.map((p) => p.city))].sort();
+
+  const getPropertyCategory = (property: DbProperty) => {
+    const title = property.title.toLowerCase();
+    if (/\b(casa|sobrado|chácara|residencial)\b/.test(title)) return "house";
+    if (/\b(apartamento|studio|cobertura|loft|flat)\b/.test(title)) return "apartment";
+    return "commercial";
+  };
 
   const filtered = properties.filter((p) => {
     const matchSearch =
@@ -30,6 +68,7 @@ const Properties = () => {
       p.city.toLowerCase().includes(search.toLowerCase()) ||
       p.address.toLowerCase().includes(search.toLowerCase());
     const matchFilter = filter === "todos" || p.type === filter;
+    const matchCategory = !category || getPropertyCategory(p) === category;
     const matchBedrooms = !bedrooms || p.bedrooms >= Number(bedrooms);
     const matchBathrooms = !bathrooms || p.bathrooms >= Number(bathrooms);
     const matchParking = !parking || p.parking >= Number(parking);
@@ -38,7 +77,19 @@ const Properties = () => {
     const matchMaxArea = !maxArea || p.area <= Number(maxArea);
     const matchMinPrice = !minPrice || p.price >= Number(minPrice);
     const matchMaxPrice = !maxPrice || p.price <= Number(maxPrice);
-    return matchSearch && matchFilter && matchBedrooms && matchBathrooms && matchParking && matchCity && matchMinArea && matchMaxArea && matchMinPrice && matchMaxPrice;
+    return (
+      matchSearch &&
+      matchFilter &&
+      matchCategory &&
+      matchBedrooms &&
+      matchBathrooms &&
+      matchParking &&
+      matchCity &&
+      matchMinArea &&
+      matchMaxArea &&
+      matchMinPrice &&
+      matchMaxPrice
+    );
   });
 
   const clearFilters = () => {

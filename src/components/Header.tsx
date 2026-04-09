@@ -20,7 +20,7 @@ const Header = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, isAdmin, signOut } = useAuth();
+  const { user, isAdmin, loading, signOut } = useAuth();
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -39,9 +39,15 @@ const Header = () => {
   }, []);
 
   const handleSignOut = async () => {
-    await signOut();
-    setDropdownOpen(false);
-    navigate("/");
+    try {
+      await signOut();
+    } catch (error) {
+      console.error("Erro ao fazer logout:", error);
+    } finally {
+      setDropdownOpen(false);
+      setOpen(false);
+      navigate("/");
+    }
   };
 
   const avatarInitial = user?.user_metadata?.full_name
@@ -97,6 +103,7 @@ const Header = () => {
                 </Link>
               )
             )}
+            {loading && <span className="text-xs text-muted-foreground">carregando sessão...</span>}
           </nav>
 
           <div className="relative" ref={dropdownRef}>

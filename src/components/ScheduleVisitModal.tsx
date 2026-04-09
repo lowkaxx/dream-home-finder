@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import { Badge } from '@/components/ui/badge';
-import { useScheduleVisit } from '@/hooks/useScheduleVisit';
+import { CreateVisitData } from '@/services/visit.service';
 
 interface ScheduleVisitModalProps {
   propertyId: string;
@@ -32,7 +32,7 @@ export function ScheduleVisitModal({ propertyId, propertyTitle, trigger }: Sched
 
   const [step, setStep] = useState<'form' | 'confirmation'>('form');
 
-  const handleSubmit = async (data: any) => {
+  const handleSubmit = async (data: CreateVisitData) => {
     await onSubmit(data);
     setStep('confirmation');
   };

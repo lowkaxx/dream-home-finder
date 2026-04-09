@@ -8,13 +8,23 @@ export function useProperties() {
   return useQuery({
     queryKey: ["properties"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("properties")
-        .select("*")
-        .order("created_at", { ascending: false });
-      if (error) throw error;
-      return data as DbProperty[];
+      try {
+        const { data, error } = await supabase
+          .from("properties")
+          .select("*")
+          .order("created_at", { ascending: false });
+        if (error) {
+          console.error("Erro ao carregar imóveis:", error);
+          throw error;
+        }
+        console.log("Imóveis carregados:", data?.length || 0);
+        return data as DbProperty[];
+      } catch (err) {
+        console.error("Erro na query de imóveis:", err);
+        throw err;
+      }
     },
+    retry: 3,
   });
 }
 

@@ -4,7 +4,28 @@ import { Link } from "react-router-dom";
 import { useReveal } from "@/hooks/useReveal";
 
 const FeaturedProperties = () => {
-  const { data: properties = [] } = useProperties();
+  const { data: properties = [], isLoading, isError } = useProperties();
+
+  if (isLoading) {
+    return (
+      <section className="py-20 bg-background">
+        <div className="container text-center">
+          <p className="text-muted-foreground">Carregando imóveis em destaque...</p>
+        </div>
+      </section>
+    );
+  }
+
+  if (isError) {
+    return (
+      <section className="py-20 bg-background">
+        <div className="container text-center">
+          <p className="text-destructive">Erro ao carregar imóveis em destaque.</p>
+        </div>
+      </section>
+    );
+  }
+
   const featured = properties.slice(0, 3);
   const sectionRef = useReveal();
 

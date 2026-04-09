@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -42,9 +42,9 @@ export function useScheduleVisit(propertyId: string) {
       const dateString = selectedDate.toISOString().split('T')[0];
       loadAvailableSlots(dateString);
     }
-  }, [selectedDate]);
+  }, [selectedDate, loadAvailableSlots]);
 
-  const loadAvailableSlots = async (date: string) => {
+  const loadAvailableSlots = useCallback(async (date: string) => {
     try {
       const slots = await VisitService.getAvailableTimeSlots(date);
       setAvailableSlots(slots);
@@ -56,7 +56,7 @@ export function useScheduleVisit(propertyId: string) {
         variant: 'destructive',
       });
     }
-  };
+  }, [toast]);
 
   const onSubmit = async (data: ScheduleVisitForm) => {
     setIsLoading(true);
