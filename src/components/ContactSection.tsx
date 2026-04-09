@@ -1,4 +1,4 @@
-import { Phone, Mail, MapPin, MessageCircle } from "lucide-react";
+import { Phone, Mail, MessageCircle } from "lucide-react";
 import { useReveal } from "@/hooks/useReveal";
 
 const ContactSection = () => {
@@ -15,7 +15,7 @@ const ContactSection = () => {
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          <div className="space-y-8">
+          <div className="space-y-8 md:mt-8">
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 rounded-xl gold-gradient flex items-center justify-center flex-shrink-0">
                 <Phone size={20} className="text-accent-foreground" />
@@ -31,22 +31,12 @@ const ContactSection = () => {
               </div>
               <div>
                 <p className="font-heading font-semibold text-foreground mb-1">E-mail</p>
-                <p className="text-muted-foreground text-sm">contato@soluction.com.br</p>
+                <p className="text-muted-foreground text-sm">ouvidoria@soluctionimoveis.com</p>
               </div>
             </div>
-            <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-xl gold-gradient flex items-center justify-center flex-shrink-0">
-                <MapPin size={20} className="text-accent-foreground" />
-              </div>
-              <div>
-                <p className="font-heading font-semibold text-foreground mb-1">Endereço</p>
-                <p className="text-muted-foreground text-sm">Av. Principal, 1000 - Centro<br />Santo André - SP</p>
-              </div>
-            </div>
-
             {/* WhatsApp CTA */}
             <a
-              href="https://wa.me/5511999999999?text=Olá! Gostaria de mais informações."
+              href="https://wa.me/5511978580174?text=Olá! Gostaria de mais informações."
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-3 w-full px-6 py-4 rounded-xl bg-[hsl(142,70%,40%)] text-primary-foreground font-heading font-semibold text-sm tracking-wide hover:bg-[hsl(142,70%,35%)] transition-all duration-300 hover:-translate-y-1 shadow-lg"

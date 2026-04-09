@@ -42,7 +42,7 @@ const HeroSection = () => {
 
       <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
         <p className="animate-fade-in text-accent font-heading text-sm md:text-base tracking-[0.3em] uppercase mb-6 opacity-0" style={{ animationDelay: '0.2s' }}>
-          Imobiliária Premium
+          Soluction Imóveis
         </p>
         <h1 className="animate-fade-in-up font-heading text-5xl md:text-7xl lg:text-8xl font-bold text-primary-foreground mb-6 leading-tight opacity-0" style={{ animationDelay: '0.4s' }}>
           Seu lar,{" "}

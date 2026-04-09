@@ -77,7 +77,7 @@ const PremiumSearchHub = () => {
                   className={`
                     relative flex items-center justify-center cursor-pointer
                     transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]
-                    glass rounded-full border border-white/20 bg-white/5
+                    glass rounded-full border border-border/50 bg-card/70
                     ${isExpanded
                       ? "w-[280px] md:w-[320px] h-[110px] md:h-[120px] rounded-[60px] shadow-card-hover scale-[1.02]"
                       : "w-[115px] md:w-[138px] h-[115px] md:h-[138px] shadow-card hover:shadow-card-hover"
@@ -98,7 +98,7 @@ const PremiumSearchHub = () => {
                   >
                     <Icon
                       className={`
-                        transition-all duration-500 text-primary-foreground
+                        transition-all duration-500 text-accent
                         ${isExpanded ? "w-9 h-9 md:w-10 md:h-10" : "w-12 h-12 md:w-14 md:h-14"}
                       `}
                       strokeWidth={1.5}
@@ -115,7 +115,7 @@ const PremiumSearchHub = () => {
                       }
                     `}
                   >
-                    <span className="font-heading font-semibold text-sm md:text-base text-primary-foreground whitespace-nowrap">
+                    <span className="font-heading font-semibold text-sm md:text-base text-foreground whitespace-nowrap">
                       {option.label}
                     </span>
                     <button
@@ -123,7 +123,7 @@ const PremiumSearchHub = () => {
                         e.stopPropagation();
                         handleNavigate(option.id);
                       }}
-                      className="text-xs font-heading font-semibold tracking-wider uppercase text-primary-foreground/80 hover:text-primary-foreground transition-colors"
+                      className="text-xs font-heading font-semibold tracking-wider uppercase text-accent hover:text-accent/80 transition-colors"
                     >
                       {option.cta} →
                     </button>
@@ -133,7 +133,7 @@ const PremiumSearchHub = () => {
                 {/* Label below circle when collapsed */}
                 <p
                   className={`
-                    text-center font-heading text-xs md:text-sm text-primary-foreground/60 mt-4 transition-all duration-300
+                    text-center font-heading text-xs md:text-sm text-muted-foreground mt-4 transition-all duration-300
                     ${isExpanded ? "opacity-0" : "opacity-100"}
                   `}
                 >
