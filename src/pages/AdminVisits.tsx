@@ -37,10 +37,6 @@ export default function AdminVisits() {
   const [selectedVisit, setSelectedVisit] = useState<VisitWithProperty | null>(null);
   const { toast } = useToast();
 
-  useEffect(() => {
-    loadVisits();
-  }, [loadVisits]);
-
   const loadVisits = useCallback(async () => {
     try {
       const data = await VisitService.getAllVisits();

@@ -10,6 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Calendar as CalendarComponent } from '@/components/ui/calendar';
 import { Badge } from '@/components/ui/badge';
 import { CreateVisitData } from '@/services/visit.service';
+import { useScheduleVisit } from '@/hooks/useScheduleVisit';
 
 interface ScheduleVisitModalProps {
   propertyId: string;
