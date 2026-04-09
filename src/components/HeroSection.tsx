@@ -4,30 +4,66 @@ import heroBg from "@/assets/hero-bg.jpg";
 
 const HeroSection = () => {
   const [loaded, setLoaded] = useState(false);
-  const [scrollY, setScrollY] = useState(0);
   const sectionRef = useRef<HTMLElement>(null);
+  const bgRef = useRef<HTMLImageElement>(null);
+  const targetY = useRef(0);
+  const currentY = useRef(0);
+  const rafId = useRef<number | null>(null);
+
+  const updateParallax = () => {
+    currentY.current += (targetY.current - currentY.current) * 0.12;
+
+    if (bgRef.current) {
+      bgRef.current.style.transform = `translateY(${currentY.current}px) scale(${loaded ? 1 : 1.1})`;
+    }
+
+    if (Math.abs(targetY.current - currentY.current) > 0.25) {
+      rafId.current = requestAnimationFrame(updateParallax);
+    } else {
+      currentY.current = targetY.current;
+      rafId.current = null;
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
       if (sectionRef.current) {
         const rect = sectionRef.current.getBoundingClientRect();
         if (rect.bottom > 0) {
-          setScrollY(window.scrollY * 0.35);
+          targetY.current = window.scrollY * 0.35;
+          if (rafId.current === null) {
+            rafId.current = requestAnimationFrame(updateParallax);
+          }
         }
       }
     };
+
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+    handleScroll();
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (rafId.current !== null) {
+        cancelAnimationFrame(rafId.current);
+      }
+    };
+  }, [loaded]);
+
+  useEffect(() => {
+    if (bgRef.current) {
+      bgRef.current.style.transform = `translateY(${currentY.current}px) scale(${loaded ? 1 : 1.1})`;
+    }
+  }, [loaded]);
 
   return (
     <section ref={sectionRef} className="relative h-screen min-h-[700px] flex items-center justify-center overflow-hidden">
       {/* Parallax background image */}
       <img
+        ref={bgRef}
         src={heroBg}
         alt="Casa de luxo"
         className={`absolute inset-0 w-full h-full object-cover transition-all duration-[1.5s] ease-out will-change-transform ${loaded ? "opacity-100 scale-100" : "opacity-0 scale-110"}`}
-        style={{ transform: `translateY(${scrollY}px) scale(${loaded ? 1 : 1.1})` }}
+        style={{ transform: `translateY(0px) scale(${loaded ? 1 : 1.1})` }}
         width={1920}
         height={1080}
         loading="eager"
