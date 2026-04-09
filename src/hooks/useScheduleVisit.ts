@@ -2,10 +2,9 @@ import { useState, useEffect, useCallback } from 'react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { VisitService, CreateVisitData, VisitSchedule } from '@/services/visit.service';
+import { VisitService, CreateVisitData } from '@/services/visit.service';
 import { useToast } from '@/hooks/use-toast';
 
-// Schema de validação Zod
 const scheduleVisitSchema = z.object({
   visitor_name: z.string().min(2, 'Nome deve ter pelo menos 2 caracteres'),
   visitor_phone: z.string().min(10, 'Telefone deve ter pelo menos 10 dígitos'),
@@ -36,14 +35,6 @@ export function useScheduleVisit(propertyId: string) {
     },
   });
 
-  // Carregar horários disponíveis quando a data muda
-  useEffect(() => {
-    if (selectedDate) {
-      const dateString = selectedDate.toISOString().split('T')[0];
-      loadAvailableSlots(dateString);
-    }
-  }, [selectedDate, loadAvailableSlots]);
-
   const loadAvailableSlots = useCallback(async (date: string) => {
     try {
       const slots = await VisitService.getAvailableTimeSlots(date);
@@ -58,6 +49,13 @@ export function useScheduleVisit(propertyId: string) {
     }
   }, [toast]);
 
+  useEffect(() => {
+    if (selectedDate) {
+      const dateString = selectedDate.toISOString().split('T')[0];
+      loadAvailableSlots(dateString);
+    }
+  }, [selectedDate, loadAvailableSlots]);
+
   const onSubmit = async (data: ScheduleVisitForm) => {
     setIsLoading(true);
     try {
@@ -70,26 +68,15 @@ export function useScheduleVisit(propertyId: string) {
         visit_time: data.visit_time,
         observations: data.observations,
       };
-
       await VisitService.createVisit(visitData);
-
-      toast({
-        title: 'Visita agendada!',
-        description: 'Sua visita foi agendada com sucesso. Entraremos em contato para confirmação.',
-      });
-
+      toast({ title: 'Visita agendada!', description: 'Entraremos em contato para confirmação.' });
       form.reset();
       setIsOpen(false);
       setSelectedDate(undefined);
       setAvailableSlots([]);
-
     } catch (error) {
       console.error('Erro ao agendar visita:', error);
-      toast({
-        title: 'Erro ao agendar',
-        description: 'Não foi possível agendar a visita. Tente novamente.',
-        variant: 'destructive',
-      });
+      toast({ title: 'Erro ao agendar', description: 'Tente novamente.', variant: 'destructive' });
     } finally {
       setIsLoading(false);
     }
@@ -98,9 +85,8 @@ export function useScheduleVisit(propertyId: string) {
   const handleDateSelect = (date: Date | undefined) => {
     setSelectedDate(date);
     if (date) {
-      const dateString = date.toISOString().split('T')[0];
-      form.setValue('visit_date', dateString);
-      form.setValue('visit_time', ''); // Reset time when date changes
+      form.setValue('visit_date', date.toISOString().split('T')[0]);
+      form.setValue('visit_time', '');
     } else {
       form.setValue('visit_date', '');
     }
@@ -110,15 +96,5 @@ export function useScheduleVisit(propertyId: string) {
     form.setValue('visit_time', time);
   };
 
-  return {
-    isOpen,
-    setIsOpen,
-    isLoading,
-    form,
-    availableSlots,
-    selectedDate,
-    onSubmit,
-    handleDateSelect,
-    handleTimeSelect,
-  };
+  return { isOpen, setIsOpen, isLoading, form, availableSlots, selectedDate, onSubmit, handleDateSelect, handleTimeSelect };
 }

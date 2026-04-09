@@ -1,11 +1,7 @@
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useMemo } from 'react';
 import { z } from 'zod';
-import { calculateFinancing, FinancingParams, FinancingResult } from '@/lib/financeCalculator';
-import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from './useAuth';
-import { useToast } from './use-toast';
+import { calculateFinancing, FinancingParams } from '@/lib/financeCalculator';
 
-// Schema de validação Zod
 const financingSchema = z.object({
   propertyPrice: z.number().min(0, 'Preço deve ser positivo'),
   downPayment: z.number().min(0, 'Entrada deve ser positiva'),
@@ -30,21 +26,17 @@ export interface FinancingSimulation {
   created_at?: string;
 }
 
-export function useFinancing(propertyId: string, propertyPrice: number) {
-  const { user } = useAuth();
-  const { toast } = useToast();
-
+export function useFinancing(_propertyId: string, propertyPrice: number) {
   const [params, setParams] = useState<FinancingParams>({
     propertyPrice,
-    downPayment: propertyPrice * 0.2, // 20% entrada padrão
-    loanTerm: 240, // 20 anos
-    interestRate: 8.5, // taxa padrão
+    downPayment: propertyPrice * 0.2,
+    loanTerm: 240,
+    interestRate: 8.5,
   });
 
-  const [isSaving, setIsSaving] = useState(false);
-  const [savedSimulations, setSavedSimulations] = useState<FinancingSimulation[]>([]);
+  const [isSaving] = useState(false);
+  const [savedSimulations] = useState<FinancingSimulation[]>([]);
 
-  // Cálculo em tempo real
   const result = useMemo(() => {
     try {
       financingSchema.parse(params);
@@ -54,77 +46,8 @@ export function useFinancing(propertyId: string, propertyPrice: number) {
     }
   }, [params]);
 
-  const loadSavedSimulations = useCallback(async () => {
-    try {
-      const { data, error } = await supabase
-        .from('financing_simulations')
-        .select('*')
-        .eq('user_id', user!.id)
-        .eq('property_id', propertyId)
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setSavedSimulations(data || []);
-    } catch (error) {
-      console.error('Erro ao carregar simulações:', error);
-    }
-  }, [user, propertyId]);
-
-  // Carregar simulações salvas
-  useEffect(() => {
-    if (user && propertyId) {
-      loadSavedSimulations();
-    }
-  }, [user, propertyId, loadSavedSimulations]);
-
   const saveSimulation = async () => {
-    if (!user || !result) return;
-
-    setIsSaving(true);
-    try {
-      const simulation: Omit<FinancingSimulation, 'id' | 'created_at'> = {
-        user_id: user.id,
-        property_id: propertyId,
-        property_price: params.propertyPrice,
-        down_payment: params.downPayment,
-        loan_term: params.loanTerm,
-        interest_rate: params.interestRate,
-        monthly_payment: result.monthlyPayment,
-        total_payment: result.totalPayment,
-        total_interest: result.totalInterest,
-      };
-
-      const { error } = await supabase
-        .from('financing_simulations')
-        .insert(simulation);
-
-      if (error) throw error;
-
-      toast({
-        title: 'Simulação salva!',
-        description: 'Sua simulação foi salva com sucesso.',
-      });
-
-      // Recarregar simulações
-      await loadSavedSimulations();
-
-      // Analytics: registrar uso
-      await supabase.from('analytics_events').insert({
-        user_id: user.id,
-        event_type: 'financing_simulation_saved',
-        event_data: { property_id: propertyId },
-      });
-
-    } catch (error) {
-      console.error('Erro ao salvar simulação:', error);
-      toast({
-        title: 'Erro ao salvar',
-        description: 'Não foi possível salvar a simulação.',
-        variant: 'destructive',
-      });
-    } finally {
-      setIsSaving(false);
-    }
+    console.warn('Financing simulations table not configured');
   };
 
   const updateParam = (key: keyof FinancingParams, value: number) => {
@@ -133,13 +56,5 @@ export function useFinancing(propertyId: string, propertyPrice: number) {
 
   const isValid = financingSchema.safeParse(params).success;
 
-  return {
-    params,
-    result,
-    isValid,
-    updateParam,
-    saveSimulation,
-    isSaving,
-    savedSimulations,
-  };
+  return { params, result, isValid, updateParam, saveSimulation, isSaving, savedSimulations };
 }

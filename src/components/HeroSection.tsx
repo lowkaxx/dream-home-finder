@@ -1,16 +1,33 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import heroBg from "@/assets/hero-bg.jpg";
 
 const HeroSection = () => {
   const [loaded, setLoaded] = useState(false);
+  const [scrollY, setScrollY] = useState(0);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (sectionRef.current) {
+        const rect = sectionRef.current.getBoundingClientRect();
+        if (rect.bottom > 0) {
+          setScrollY(window.scrollY * 0.35);
+        }
+      }
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    <section className="relative h-screen min-h-[700px] flex items-center justify-center overflow-hidden">
+    <section ref={sectionRef} className="relative h-screen min-h-[700px] flex items-center justify-center overflow-hidden">
+      {/* Parallax background image */}
       <img
         src={heroBg}
         alt="Casa de luxo"
-        className={`absolute inset-0 w-full h-full object-cover transition-all duration-[1.5s] ease-out ${loaded ? "opacity-100 scale-100" : "opacity-0 scale-110"}`}
+        className={`absolute inset-0 w-full h-full object-cover transition-all duration-[1.5s] ease-out will-change-transform ${loaded ? "opacity-100 scale-100" : "opacity-0 scale-110"}`}
+        style={{ transform: `translateY(${scrollY}px) scale(${loaded ? 1 : 1.1})` }}
         width={1920}
         height={1080}
         loading="eager"
@@ -39,7 +56,7 @@ const HeroSection = () => {
           <Link to="/#contato" className="btn-outline-premium">
             Anunciar
           </Link>
-          <Link to="/imoveis" className="btn-premium">
+          <Link to="/imoveis" className="btn-premium btn-glow">
             Buscar Imóveis
           </Link>
         </div>

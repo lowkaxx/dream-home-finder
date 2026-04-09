@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { ChevronLeft, ChevronRight, Share2, Bed, Bath, Car, Maximize, Pencil, Trash2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, Share2, Pencil, Trash2, X } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FavoriteButton from "@/components/FavoriteButton";
@@ -21,6 +21,7 @@ const PropertyDetail = () => {
   const deleteProperty = useDeleteProperty();
   const { toast } = useToast();
   const [currentImg, setCurrentImg] = useState(0);
+  const [fullscreen, setFullscreen] = useState(false);
 
   const handleDelete = async () => {
     if (!property) return;
@@ -80,7 +81,7 @@ const PropertyDetail = () => {
       <div className="pt-24 pb-20">
         <div className="container">
           <div className="flex items-center justify-between mb-6">
-            <Link to="/imoveis" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-primary">
+            <Link to="/imoveis" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-primary transition-colors">
               <ChevronLeft size={16} /> Voltar
             </Link>
             {isAdmin && (
@@ -103,9 +104,17 @@ const PropertyDetail = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
             <div className="space-y-4">
-              <div className="relative aspect-[4/3] rounded-lg overflow-hidden bg-muted">
+              <div
+                className="relative aspect-[4/3] rounded-lg overflow-hidden bg-muted cursor-pointer group"
+                onClick={() => images.length > 0 && setFullscreen(true)}
+              >
                 {images.length > 0 ? (
-                  <img src={images[currentImg]} alt={property.title} className="w-full h-full object-cover" />
+                  <img
+                    src={images[currentImg]}
+                    alt={property.title}
+                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    key={currentImg}
+                  />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-muted-foreground">Sem foto</div>
                 )}
@@ -118,10 +127,10 @@ const PropertyDetail = () => {
                     <span className="absolute bottom-4 right-4 bg-secondary/80 text-secondary-foreground text-xs px-3 py-1 rounded">
                       {currentImg + 1} / {images.length}
                     </span>
-                    <button onClick={prevImg} className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-secondary/70 text-secondary-foreground flex items-center justify-center hover:bg-secondary transition-colors">
+                    <button onClick={(e) => { e.stopPropagation(); prevImg(); }} className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-secondary/70 text-secondary-foreground flex items-center justify-center hover:bg-secondary transition-all duration-300 hover:scale-110">
                       <ChevronLeft size={20} />
                     </button>
-                    <button onClick={nextImg} className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-secondary/70 text-secondary-foreground flex items-center justify-center hover:bg-secondary transition-colors">
+                    <button onClick={(e) => { e.stopPropagation(); nextImg(); }} className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-secondary/70 text-secondary-foreground flex items-center justify-center hover:bg-secondary transition-all duration-300 hover:scale-110">
                       <ChevronRight size={20} />
                     </button>
                   </>
@@ -134,8 +143,8 @@ const PropertyDetail = () => {
                     <button
                       key={i}
                       onClick={() => setCurrentImg(i)}
-                      className={`w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${
-                        i === currentImg ? "border-primary" : "border-transparent opacity-60 hover:opacity-100"
+                      className={`w-20 h-20 rounded-lg overflow-hidden border-2 transition-all duration-300 ${
+                        i === currentImg ? "border-primary scale-105 shadow-lg" : "border-transparent opacity-60 hover:opacity-100 hover:scale-105"
                       }`}
                     >
                       <img src={img} alt="" className="w-full h-full object-cover" loading="lazy" />
@@ -154,14 +163,14 @@ const PropertyDetail = () => {
               </p>
 
               <div className="flex items-center gap-3 mb-8">
-                <button className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary transition-colors">
+                <button className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary transition-all duration-300 hover:scale-110">
                   <Share2 size={18} />
                 </button>
                 <a
                   href="https://wa.me/5511978580174"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-full gold-gradient flex items-center justify-center text-primary-foreground"
+                  className="w-10 h-10 rounded-full gold-gradient flex items-center justify-center text-accent-foreground transition-transform duration-300 hover:scale-110 hover:shadow-lg"
                 >
                   <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current">
                     <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z" />
@@ -190,6 +199,57 @@ const PropertyDetail = () => {
           </div>
         </div>
       </div>
+
+      {/* Fullscreen Gallery Modal */}
+      {fullscreen && images.length > 0 && (
+        <div
+          className="fixed inset-0 z-[100] bg-background/95 backdrop-blur-xl flex items-center justify-center animate-fade-in"
+          onClick={() => setFullscreen(false)}
+        >
+          <button
+            onClick={() => setFullscreen(false)}
+            className="absolute top-6 right-6 w-12 h-12 rounded-full bg-card/80 flex items-center justify-center text-foreground hover:bg-card transition-colors z-10"
+          >
+            <X size={24} />
+          </button>
+
+          <img
+            src={images[currentImg]}
+            alt={property.title}
+            className="max-w-[90vw] max-h-[85vh] object-contain rounded-lg shadow-2xl animate-scale-in"
+            onClick={(e) => e.stopPropagation()}
+          />
+
+          {images.length > 1 && (
+            <>
+              <button
+                onClick={(e) => { e.stopPropagation(); prevImg(); }}
+                className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-card/80 flex items-center justify-center text-foreground hover:bg-card transition-all duration-300 hover:scale-110"
+              >
+                <ChevronLeft size={24} />
+              </button>
+              <button
+                onClick={(e) => { e.stopPropagation(); nextImg(); }}
+                className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-card/80 flex items-center justify-center text-foreground hover:bg-card transition-all duration-300 hover:scale-110"
+              >
+                <ChevronRight size={24} />
+              </button>
+              <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2" onClick={(e) => e.stopPropagation()}>
+                {images.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setCurrentImg(i)}
+                    className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                      i === currentImg ? "bg-accent scale-125" : "bg-muted-foreground/40 hover:bg-muted-foreground/70"
+                    }`}
+                  />
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+      )}
+
       <Footer />
     </div>
   );

@@ -2,6 +2,7 @@ import { useProperties } from "@/hooks/useProperties";
 import PropertyCard from "./PropertyCard";
 import { Link } from "react-router-dom";
 import { useReveal } from "@/hooks/useReveal";
+import { useStaggerReveal } from "@/hooks/useStaggerReveal";
 
 const FeaturedProperties = () => {
   const { data: properties = [], isLoading, isError } = useProperties();
@@ -43,11 +44,7 @@ const FeaturedProperties = () => {
         </p>
 
         {featured.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featured.map((p) => (
-              <PropertyCard key={p.id} property={p} />
-            ))}
-          </div>
+          <StaggerGrid items={featured} />
         ) : (
           <p className="text-muted-foreground text-center py-8">Nenhum imóvel cadastrado ainda.</p>
         )}
@@ -61,5 +58,25 @@ const FeaturedProperties = () => {
     </section>
   );
 };
+
+function StaggerGrid({ items }: { items: ReturnType<typeof useProperties>["data"] }) {
+  const { containerRef, visibleItems } = useStaggerReveal(items?.length || 0);
+
+  return (
+    <div ref={containerRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {items?.map((p, i) => (
+        <div
+          key={p.id}
+          className={`transition-all duration-700 ease-out ${
+            visibleItems.has(i) ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
+          }`}
+          style={{ transitionDelay: `${i * 150}ms` }}
+        >
+          <PropertyCard property={p} index={i} />
+        </div>
+      ))}
+    </div>
+  );
+}
 
 export default FeaturedProperties;
