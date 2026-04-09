@@ -15,7 +15,7 @@ const ContactSection = () => {
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          <div className="space-y-8 md:mt-8">
+          <div className="space-y-8 md:mt-[50px]">
             <div className="flex items-start gap-4">
               <div className="w-12 h-12 rounded-xl gold-gradient flex items-center justify-center flex-shrink-0">
                 <Phone size={20} className="text-accent-foreground" />
