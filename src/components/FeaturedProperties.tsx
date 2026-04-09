@@ -5,6 +5,7 @@ import { useReveal } from "@/hooks/useReveal";
 
 const FeaturedProperties = () => {
   const { data: properties = [], isLoading, isError } = useProperties();
+  const sectionRef = useReveal();
 
   if (isLoading) {
     return (
@@ -27,7 +28,6 @@ const FeaturedProperties = () => {
   }
 
   const featured = properties.slice(0, 3);
-  const sectionRef = useReveal();
 
   return (
     <section ref={sectionRef} className="py-24 bg-background reveal-section">

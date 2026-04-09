@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import type { LucideIcon } from "lucide-react";
-import { Home, Building2, Shop } from "lucide-react";
+import { Home, Building2, Store } from "lucide-react";
 
 const options: Array<{
   id: "house" | "apartment" | "commercial";
@@ -28,7 +28,7 @@ const options: Array<{
     id: "commercial",
     label: "Buscar Comerciais",
     cta: "Ver opções",
-    icon: Shop,
+    icon: Store,
     description: "Espaços comerciais refinados para seu negócio prosperar.",
   },
 ];
