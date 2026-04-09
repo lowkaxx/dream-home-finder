@@ -1,114 +1,148 @@
-import { Link, useNavigate } from "react-router-dom";
-import { Plus, Pencil, Trash2, LogOut } from "lucide-react";
-import { useAuth } from "@/hooks/useAuth";
-import { useProperties, useDeleteProperty } from "@/hooks/useProperties";
-import { useToast } from "@/hooks/use-toast";
-import logo from "@/assets/logo.png";
-
-const formatPrice = (price: number, type: string) => {
-  const formatted = price.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-  return type === "aluguel" ? `${formatted}/mês` : formatted;
-};
+import { motion } from "framer-motion";
+import {
+  Building,
+  Users,
+  Calendar,
+  Heart,
+  TrendingUp,
+  Home
+} from "lucide-react";
+import AdminLayout from "@/components/AdminLayout";
+import KPICard from "@/components/KPICard";
+import { ViewsChart, NeighborhoodChart, ConversionChart } from "@/components/Charts";
+import { LeadsTable, AppointmentsTable } from "@/components/DataTable";
+import DashboardSkeleton from "@/components/DashboardSkeleton";
+import { useAdminDashboard } from "@/hooks/useAdminDashboard";
 
 const AdminDashboard = () => {
-  const { signOut, user } = useAuth();
-  const { data: properties, isLoading } = useProperties();
-  const deleteProperty = useDeleteProperty();
-  const navigate = useNavigate();
-  const { toast } = useToast();
+  const { data, isLoading, error } = useAdminDashboard();
 
-  const handleDelete = async (id: string, title: string) => {
-    if (!confirm(`Deseja realmente excluir "${title}"?`)) return;
-    try {
-      await deleteProperty.mutateAsync(id);
-      toast({ title: "Imóvel excluído com sucesso" });
-    } catch {
-      toast({ title: "Erro ao excluir", variant: "destructive" });
-    }
-  };
+  if (isLoading) {
+    return (
+      <AdminLayout>
+        <DashboardSkeleton />
+      </AdminLayout>
+    );
+  }
+
+  if (error) {
+    return (
+      <AdminLayout>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="flex items-center justify-center min-h-96"
+        >
+          <div className="text-center">
+            <p className="text-lg font-medium text-muted-foreground mb-2">
+              Erro ao carregar dados
+            </p>
+            <p className="text-sm text-muted-foreground">
+              Tente recarregar a página
+            </p>
+          </div>
+        </motion.div>
+      </AdminLayout>
+    );
+  }
+
+  if (!data) {
+    return (
+      <AdminLayout>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="flex items-center justify-center min-h-96"
+        >
+          <div className="text-center">
+            <p className="text-lg font-medium text-muted-foreground">
+              Nenhum dado encontrado
+            </p>
+          </div>
+        </motion.div>
+      </AdminLayout>
+    );
+  }
+
+  const { kpis, leads, appointments, popularNeighborhoods, topViewedProperties } = data;
+
+  // Mock data for conversion chart
+  const conversionData = [
+    { month: 'Jan', leads: 65, conversions: 15 },
+    { month: 'Fev', leads: 78, conversions: 18 },
+    { month: 'Mar', leads: 82, conversions: 22 },
+    { month: 'Abr', leads: 89, conversions: 21 },
+  ];
 
   return (
-    <div className="min-h-screen bg-muted">
-      <header className="bg-card shadow-card">
-        <div className="container flex items-center justify-between h-16">
-          <div className="flex items-center gap-3">
-            <img src={logo} alt="Soluction" className="h-10 w-auto" />
-            <span className="font-heading font-bold text-foreground text-lg">Admin</span>
-          </div>
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-muted-foreground hidden sm:block">{user?.email}</span>
-            <button
-              onClick={async () => { await signOut(); navigate("/admin/login"); }}
-              className="flex items-center gap-1 text-sm text-muted-foreground hover:text-destructive transition-colors"
-            >
-              <LogOut size={16} /> Sair
-            </button>
+    <AdminLayout currentPage="dashboard">
+      <div className="space-y-8">
+        {/* KPIs */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6"
+        >
+          <KPICard
+            title="Total Imóveis"
+            value={kpis.totalProperties}
+            icon={Building}
+            trend={{ value: 12, isPositive: true }}
+            delay={0}
+          />
+          <KPICard
+            title="Total Leads"
+            value={kpis.totalLeads}
+            icon={Users}
+            trend={{ value: 8, isPositive: true }}
+            delay={0.1}
+          />
+          <KPICard
+            title="Agendamentos Pendentes"
+            value={kpis.pendingAppointments}
+            icon={Calendar}
+            trend={{ value: -3, isPositive: false }}
+            delay={0.2}
+          />
+          <KPICard
+            title="Total Favoritos"
+            value={kpis.totalFavorites}
+            icon={Heart}
+            trend={{ value: 15, isPositive: true }}
+            delay={0.3}
+          />
+          <KPICard
+            title="Taxa Conversão"
+            value={`${kpis.conversionRate}%`}
+            icon={TrendingUp}
+            trend={{ value: 5, isPositive: true }}
+            delay={0.4}
+          />
+          <KPICard
+            title="Lançamentos Ativos"
+            value={kpis.activeListings}
+            icon={Home}
+            trend={{ value: 7, isPositive: true }}
+            delay={0.5}
+          />
+        </motion.div>
+
+        {/* Charts */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <ViewsChart data={topViewedProperties} />
+          <NeighborhoodChart data={popularNeighborhoods} />
+          <div className="lg:col-span-2">
+            <ConversionChart data={conversionData} />
           </div>
         </div>
-      </header>
 
-      <div className="container py-8">
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="font-heading text-2xl font-bold text-foreground">Imóveis</h1>
-          <Link
-            to="/admin/imovel/novo"
-            className="inline-flex items-center gap-2 px-5 py-2.5 gold-gradient text-primary-foreground font-medium text-sm rounded-lg hover:opacity-90 transition-opacity"
-          >
-            <Plus size={18} /> Novo Imóvel
-          </Link>
+        {/* Tables */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <LeadsTable leads={leads} />
+          <AppointmentsTable appointments={appointments} />
         </div>
-
-        {isLoading ? (
-          <p className="text-muted-foreground text-center py-16">Carregando...</p>
-        ) : !properties?.length ? (
-          <p className="text-muted-foreground text-center py-16">Nenhum imóvel cadastrado.</p>
-        ) : (
-          <div className="bg-card rounded-lg shadow-card overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-border bg-muted/50">
-                    <th className="text-left px-4 py-3 font-medium text-muted-foreground">Imóvel</th>
-                    <th className="text-left px-4 py-3 font-medium text-muted-foreground hidden md:table-cell">Cidade</th>
-                    <th className="text-left px-4 py-3 font-medium text-muted-foreground">Tipo</th>
-                    <th className="text-left px-4 py-3 font-medium text-muted-foreground">Preço</th>
-                    <th className="text-right px-4 py-3 font-medium text-muted-foreground">Ações</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {properties.map((p) => (
-                    <tr key={p.id} className="border-b border-border last:border-0 hover:bg-muted/30 transition-colors">
-                      <td className="px-4 py-3 font-medium text-foreground">{p.title}</td>
-                      <td className="px-4 py-3 text-muted-foreground hidden md:table-cell">{p.city}</td>
-                      <td className="px-4 py-3">
-                        <span className="badge-venda text-xs px-2 py-0.5 rounded-full uppercase">{p.type}</span>
-                      </td>
-                      <td className="px-4 py-3 font-heading font-bold text-primary">{formatPrice(p.price, p.type)}</td>
-                      <td className="px-4 py-3">
-                        <div className="flex items-center justify-end gap-2">
-                          <Link
-                            to={`/admin/imovel/${p.id}`}
-                            className="w-8 h-8 rounded-md border border-border flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary transition-colors"
-                          >
-                            <Pencil size={14} />
-                          </Link>
-                          <button
-                            onClick={() => handleDelete(p.id, p.title)}
-                            className="w-8 h-8 rounded-md border border-border flex items-center justify-center text-muted-foreground hover:text-destructive hover:border-destructive transition-colors"
-                          >
-                            <Trash2 size={14} />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
       </div>
-    </div>
+    </AdminLayout>
   );
 };
 

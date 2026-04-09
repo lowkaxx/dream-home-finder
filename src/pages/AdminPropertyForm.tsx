@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { ChevronLeft, Upload, X as XIcon } from "lucide-react";
-import { useProperty, useCreateProperty, useUpdateProperty } from "@/hooks/useProperties";
+import { ChevronLeft, Upload, X as XIcon, Trash2 } from "lucide-react";
+import { useProperty, useCreateProperty, useUpdateProperty, useDeleteProperty } from "@/hooks/useProperties";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
@@ -13,6 +13,7 @@ const AdminPropertyForm = () => {
   const { data: existing, isLoading } = useProperty(isEdit ? id : undefined);
   const createProperty = useCreateProperty();
   const updateProperty = useUpdateProperty();
+  const deleteProperty = useDeleteProperty();
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -93,6 +94,25 @@ const AdminPropertyForm = () => {
     setImageUrls((prev) => prev.filter((_, i) => i !== index));
   };
 
+  const handleDelete = async () => {
+    if (!existing) return;
+    
+    const confirmed = window.confirm(
+      `Tem certeza que deseja excluir o imóvel "${existing.title}"? Esta ação não pode ser desfeita.`
+    );
+    
+    if (!confirmed) return;
+
+    try {
+      await deleteProperty.mutateAsync(existing.id);
+      toast({ title: "Imóvel excluído com sucesso" });
+      navigate("/imoveis");
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Erro desconhecido";
+      toast({ title: "Erro ao excluir", description: message, variant: "destructive" });
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const payload = {
@@ -121,8 +141,9 @@ const AdminPropertyForm = () => {
         toast({ title: "Imóvel cadastrado com sucesso" });
       }
       navigate("/imoveis");
-    } catch (err: any) {
-      toast({ title: "Erro ao salvar", description: err.message, variant: "destructive" });
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Erro desconhecido";
+      toast({ title: "Erro ao salvar", description: message, variant: "destructive" });
     }
   };
 
@@ -270,6 +291,18 @@ const AdminPropertyForm = () => {
             >
               {createProperty.isPending || updateProperty.isPending ? "Salvando..." : isEdit ? "Atualizar Imóvel" : "Cadastrar Imóvel"}
             </button>
+
+            {isEdit && (
+              <button
+                type="button"
+                onClick={handleDelete}
+                disabled={deleteProperty.isPending}
+                className="w-full py-3 bg-destructive text-destructive-foreground font-heading font-semibold rounded-lg hover:bg-destructive/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+              >
+                <Trash2 size={18} />
+                {deleteProperty.isPending ? "Excluindo..." : "Excluir Imóvel"}
+              </button>
+            )}
           </form>
         </div>
       </div>

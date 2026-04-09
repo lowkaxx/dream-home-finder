@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { ChevronLeft, ChevronRight, Share2, Bed, Bath, Car, Maximize, Pencil, Trash2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, Share2, Bed, Bath, Car, Maximize, Pencil, Trash2, Calendar } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FavoriteButton from "@/components/FavoriteButton";
 import { useProperty, useDeleteProperty } from "@/hooks/useProperties";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
+import { FinancingSimulator } from "@/components/FinancingSimulator";
+import { ScheduleVisitModal } from "@/components/ScheduleVisitModal";
 
 const formatPrice = (price: number, type: string) => {
   const formatted = price.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -188,8 +190,30 @@ const PropertyDetail = () => {
               )}
             </div>
           </div>
+
+          {/* Simulador de Financiamento */}
+          <div className="mt-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg p-8">
+            <FinancingSimulator propertyId={property.id} propertyPrice={property.price} />
+          </div>
         </div>
       </div>
+
+      {/* Botão Sticky Agendar Visita */}
+      <div className="fixed bottom-6 right-6 z-50">
+        <ScheduleVisitModal
+          propertyId={property.id}
+          propertyTitle={property.title}
+          trigger={
+            <button className="group relative bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-6 py-4 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center gap-3 font-medium">
+              <div className="absolute inset-0 bg-white/20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <Calendar className="w-5 h-5 relative z-10" />
+              <span className="relative z-10 hidden sm:inline">Agendar Visita</span>
+              <span className="relative z-10 sm:hidden">Visita</span>
+            </button>
+          }
+        />
+      </div>
+
       <Footer />
     </div>
   );
