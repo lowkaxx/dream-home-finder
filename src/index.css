@@ -181,7 +181,7 @@
 
   /* Premium button */
   .btn-premium {
-    @apply inline-flex items-center justify-center px-8 py-3.5 font-heading font-semibold text-sm tracking-widest uppercase rounded-full transition-all duration-300;
+    @apply inline-flex items-center justify-center px-8 py-3.5 font-heading font-semibold text-sm tracking-widest uppercase rounded-full transition-all duration-300 relative overflow-hidden;
     background: var(--gold-gradient);
     color: hsl(var(--accent-foreground));
     box-shadow: 0 4px 20px -4px hsla(40, 90%, 61%, 0.4);
@@ -189,6 +189,9 @@
   .btn-premium:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 30px -4px hsla(40, 90%, 61%, 0.5);
+  }
+  .btn-glow:hover {
+    box-shadow: 0 0 30px hsla(40, 90%, 61%, 0.4), 0 8px 30px -4px hsla(40, 90%, 61%, 0.5);
   }
 
   .btn-outline-premium {
@@ -200,6 +203,7 @@
     background: hsla(40, 90%, 61%, 0.12);
     border-color: hsl(40, 90%, 61%);
     transform: translateY(-2px);
+    box-shadow: 0 0 20px hsla(40, 90%, 61%, 0.15);
   }
 
   /* Sticky navbar styles */
