@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Search, SlidersHorizontal, X } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -6,7 +7,9 @@ import PropertyCard from "@/components/PropertyCard";
 import { useProperties } from "@/hooks/useProperties";
 
 const Properties = () => {
-  const [search, setSearch] = useState("");
+  const [searchParams] = useSearchParams();
+  const tipoParam = searchParams.get("tipo") || "";
+  const [search, setSearch] = useState(tipoParam);
   const [filter, setFilter] = useState<"todos" | "venda" | "aluguel">("todos");
   const [showFilters, setShowFilters] = useState(false);
   const [bedrooms, setBedrooms] = useState("");
