@@ -58,10 +58,9 @@ const Header = () => {
     ? [...navItems, { label: "Cadastrar Imóvel", href: "/admin/imovel/novo" }]
     : navItems;
 
-  const isHome = location.pathname === "/";
   const navBg = scrolled
     ? "bg-card/95 backdrop-blur-xl navbar-scrolled"
-    : isHome
+    : shouldBeTransparent
       ? "bg-transparent"
       : "bg-card/95 backdrop-blur-xl";
 
@@ -82,7 +81,7 @@ const Header = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   className={`text-sm font-medium tracking-wide transition-all duration-300 hover:text-accent ${
-                    scrolled || !isHome ? "text-foreground" : "text-primary-foreground"
+                    scrolled || !shouldBeTransparent ? "text-foreground" : "text-primary-foreground"
                   }`}
                 >
                   {item.label}
@@ -94,7 +93,7 @@ const Header = () => {
                   className={`text-sm font-medium tracking-wide transition-all duration-300 hover:text-accent ${
                     location.pathname === item.href
                       ? "text-accent border-b-2 border-accent pb-1"
-                      : scrolled || !isHome
+                      : scrolled || !shouldBeTransparent
                         ? "text-foreground"
                         : "text-primary-foreground"
                   }`}
@@ -162,7 +161,7 @@ const Header = () => {
           </div>
         </div>
 
-        <button className={`md:hidden transition-colors ${scrolled || !isHome ? "text-foreground" : "text-primary-foreground"}`} onClick={() => setOpen(!open)}>
+        <button className={`md:hidden transition-colors ${scrolled || !shouldBeTransparent ? "text-foreground" : "text-primary-foreground"}`} onClick={() => setOpen(!open)}>
           {open ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>

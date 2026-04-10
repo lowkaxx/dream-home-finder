@@ -11,6 +11,16 @@ const HeroSection = () => {
   const rafId = useRef<number | null>(null);
 
   useEffect(() => {
+    const isMobile = window.innerWidth < 768;
+    
+    if (isMobile) {
+      // Disable parallax on mobile to prevent jumps
+      if (bgRef.current) {
+        bgRef.current.style.transform = `scale(${loaded ? 1 : 1.1})`;
+      }
+      return;
+    }
+
     const updateParallax = () => {
       currentY.current += (targetY.current - currentY.current) * 0.12;
 
@@ -56,7 +66,7 @@ const HeroSection = () => {
   }, [loaded]);
 
   return (
-    <section ref={sectionRef} className="relative min-h-[100dvh] md:h-screen md:min-h-[700px] flex items-center justify-center overflow-hidden">
+    <section ref={sectionRef} className="relative min-h-[100dvh] flex items-center justify-center overflow-hidden">
       {/* Parallax background image */}
       <img
         ref={bgRef}

@@ -6,8 +6,14 @@ export function useStaggerReveal(itemCount: number) {
   const hasRevealedRef = useRef(false);
 
   useEffect(() => {
+    // Reset state when itemCount changes
+    setVisibleItems(new Set());
+    hasRevealedRef.current = false;
+  }, [itemCount]);
+
+  useEffect(() => {
     const el = containerRef.current;
-    if (!el || hasRevealedRef.current) return;
+    if (!el || hasRevealedRef.current || itemCount === 0) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -22,12 +28,12 @@ export function useStaggerReveal(itemCount: number) {
           observer.unobserve(el);
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.1, rootMargin: '50px' }
     );
 
     observer.observe(el);
     return () => observer.disconnect();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps -- itemCount dependency removed to prevent state reset
+  }, [itemCount]);
 
   return { containerRef, visibleItems };
 }
