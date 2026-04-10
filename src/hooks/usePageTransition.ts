@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import { useLocation } from "react-router-dom";
 
 type Direction = "left" | "right" | "none";
@@ -10,7 +10,7 @@ export function usePageTransition() {
   const prevPath = useRef(location.pathname);
 
   // Ordered routes for directional slide
-  const routeOrder = ["/", "/imoveis", "/sobre", "/depoimentos", "/contato"];
+  const routeOrder = useMemo(() => ["/", "/imoveis", "/sobre", "/depoimentos", "/contato"], []);
 
   useEffect(() => {
     if (location.pathname === prevPath.current) return;
@@ -40,7 +40,7 @@ export function usePageTransition() {
     }, 280);
 
     return () => clearTimeout(timeout);
-  }, [location]);
+  }, [location, routeOrder]);
 
   return { displayLocation, transitionClass };
 }
