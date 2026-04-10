@@ -21,7 +21,6 @@ const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, isAdmin, loading, signOut } = useAuth();
-  const shouldBeTransparent = location.pathname === "/";
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
