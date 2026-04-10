@@ -3,14 +3,16 @@ import { useEffect, useRef, useState } from "react";
 export function useStaggerReveal(itemCount: number) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [visibleItems, setVisibleItems] = useState<Set<number>>(new Set());
+  const hasRevealedRef = useRef(false);
 
   useEffect(() => {
     const el = containerRef.current;
-    if (!el) return;
+    if (!el || hasRevealedRef.current) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
+          hasRevealedRef.current = true;
           // Stagger reveal each item
           for (let i = 0; i < itemCount; i++) {
             setTimeout(() => {
@@ -25,7 +27,7 @@ export function useStaggerReveal(itemCount: number) {
 
     observer.observe(el);
     return () => observer.disconnect();
-  }, [itemCount]);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps -- itemCount dependency removed to prevent state reset
 
   return { containerRef, visibleItems };
 }
