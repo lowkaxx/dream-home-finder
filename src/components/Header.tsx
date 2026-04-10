@@ -58,10 +58,6 @@ const Header = () => {
     ? [...navItems, { label: "Cadastrar Imóvel", href: "/admin/imovel/novo" }]
     : navItems;
 
-  const isHome = location.pathname === "/";
-  const isAbout = location.pathname === "/sobre";
-  const shouldBeTransparent = (isHome || isAbout) && !scrolled;
-
   const navBg = scrolled
     ? "bg-card/95 backdrop-blur-xl navbar-scrolled"
     : shouldBeTransparent
